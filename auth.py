@@ -3,6 +3,45 @@ import random
 import os
 
 # ==========================================
+# 0. ADMIN PASSWORD GATE
+# ==========================================
+
+ADMIN_PASSWORD = "admin"  # Change this to your desired password
+
+def show_admin_password_gate():
+    """Display admin password authentication screen before login page"""
+    st.set_page_config(
+        page_title="JSS SIDI PRO - Admin Access",
+        layout="centered",
+        initial_sidebar_state="collapsed"
+    )
+    
+    st.title("🔒 JSS SIDI PRO")
+    st.markdown("---")
+    st.markdown("### Admin Access Required")
+    st.write("Please enter the universal admin password to proceed.")
+    
+    # Admin password input
+    admin_pass = st.text_input(
+        "Admin Password",
+        type="password",
+        key="admin_password_field",
+        placeholder="Enter admin password"
+    )
+    
+    if st.button("Access System", use_container_width=True, type="primary"):
+        if admin_pass == ADMIN_PASSWORD:
+            st.session_state['admin_verified'] = True
+            st.success("✅ Access Granted! Redirecting...")
+            st.rerun()
+        else:
+            st.error("❌ Invalid admin password. Access denied.")
+
+def is_admin_verified():
+    """Check if admin password has been verified"""
+    return st.session_state.get('admin_verified', False)
+
+# ==========================================
 # 1. AUTHENTICATION CORE LOGIC
 # ==========================================
 

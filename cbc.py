@@ -12,7 +12,7 @@ from PIL import Image
 import plotly.express as px
 import os
 import datetime
-from auth import is_user_logged_in, show_auth_page, logout_user, get_current_user
+from auth import is_user_logged_in, show_auth_page, logout_user, get_current_user, show_admin_password_gate, is_admin_verified
 from cloud_db import (
     get_firebase_db, init_user_database, get_learners, save_to_cloud_db,
     update_learner_marks, delete_learner, get_user_settings, 
@@ -103,6 +103,16 @@ def get_grading_logic(score):
 # AUTHENTICATION GATE
 # ==========================================
 
+# Initialize admin verification state
+if 'admin_verified' not in st.session_state:
+    st.session_state.admin_verified = False
+
+# First gate: Admin Password Verification
+if not st.session_state.admin_verified:
+    show_admin_password_gate()
+    st.stop()
+
+# Second gate: User Login
 if not st.session_state.logged_in:
     show_auth_page()
 else:
@@ -662,4 +672,3 @@ if __name__ == "__main__":
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
 
-    
