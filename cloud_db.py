@@ -31,9 +31,24 @@ def save_to_cloud_db(df, grade, user_id):
         user_folder = init_user_database(user_id)
         file_path = os.path.join(user_folder, f"{grade}_data.csv")
         
+        # Standardize column names in new df
+        if 'Assessment Number' in df.columns:
+            df.rename(columns={'Assessment Number': 'assmt_no'}, inplace=True)
+        if 'Learner\'s Name' in df.columns:
+            df.rename(columns={'Learner\'s Name': 'name'}, inplace=True)
+        if 'grade' not in df.columns:
+            df['grade'] = grade
+        
         if os.path.exists(file_path):
             existing_df = pd.read_csv(file_path)
-            # Merge and remove duplicates based on Assessment Number
+            # Standardize existing df columns
+            if 'Assessment Number' in existing_df.columns:
+                existing_df.rename(columns={'Assessment Number': 'assmt_no'}, inplace=True)
+            if 'Learner\'s Name' in existing_df.columns:
+                existing_df.rename(columns={'Learner\'s Name': 'name'}, inplace=True)
+            if 'grade' not in existing_df.columns:
+                existing_df['grade'] = grade
+            # Merge and remove duplicates based on assmt_no
             df = pd.concat([existing_df, df]).drop_duplicates(subset=['assmt_no'], keep='last')
             
         df.to_csv(file_path, index=False)

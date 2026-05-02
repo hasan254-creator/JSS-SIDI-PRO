@@ -56,7 +56,7 @@ class CBC_Report_PDF(FPDF):
         addr = st.session_state.get('school_address', 'School Address')
         term = st.session_state.get('term_info', 'Term 1, 2026')
         
-        # Draw Logo and Watermark
+        # Draw Logo and optional watermark
         if logo_bytes:
             if not hasattr(self, 'logo_path'):
                 import tempfile
@@ -65,9 +65,10 @@ class CBC_Report_PDF(FPDF):
                     img.save(tmp, format='PNG')
                     self.logo_path = tmp.name
             self.image(self.logo_path, 10, 8, 22)
-            self.set_alpha(0.05)
-            self.image(self.logo_path, 50, 110, 110)
-            self.set_alpha(1)
+            if callable(getattr(self, 'set_alpha', None)):
+                self.set_alpha(0.05)
+                self.image(self.logo_path, 50, 110, 110)
+                self.set_alpha(1)
             self.set_x(35)
         
         # School Details
@@ -349,8 +350,8 @@ else:
                                 )
                             
                             if st.form_submit_button("Update Marks"):
-                                learner_id = f"{selected['assmt_no']}_{selected['grade']}"
-                                success, msg = update_learner_marks(user_id, learner_id, new_marks)
+                                learner_id = selected['assmt_no']
+                                success, msg = update_learner_marks(user_id, learner_id, active_grade, new_marks)
                                 if success:
                                     st.success(msg)
                                     st.rerun()
@@ -376,8 +377,8 @@ else:
                         selected = next((l for l in learners if l['name'] == learner_name), None)
                         
                         if selected:
-                            learner_id = f"{selected['assmt_no']}_{selected['grade']}"
-                            success, msg = delete_learner(user_id, learner_id)
+                            learner_id = selected['assmt_no']
+                            success, msg = delete_learner(user_id, learner_id, active_grade)
                             if success:
                                 st.success(msg)
                                 st.rerun()

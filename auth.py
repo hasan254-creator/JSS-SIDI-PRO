@@ -11,12 +11,12 @@ ADMIN_PASSWORD = "admin"  # Change this to your desired password
 def show_admin_password_gate():
     """Display admin password authentication screen before login page"""
     st.set_page_config(
-        page_title="JSS SIDI PRO - Admin Access",
+        page_title="JSS SAIDI PRO - Admin Access",
         layout="centered",
         initial_sidebar_state="collapsed"
     )
     
-    st.title("🔒 JSS SIDI PRO")
+    st.title("🔒 JSS SAIDI PRO")
     st.markdown("---")
     st.markdown("### Admin Access Required")
     st.write("Please enter the universal admin password to proceed.")
@@ -70,7 +70,7 @@ def send_recovery_code(user_email):
 # ==========================================
 
 def show_auth_page():
-    st.title("JSS SIDI PRO")
+    st.title("JSS SAIDI PRO")
     st.subheader("Academic Assessment Management System")
     
     tab1, tab2 = st.tabs(["🔐Login", "Create Account"])
